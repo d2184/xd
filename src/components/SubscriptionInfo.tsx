@@ -8,10 +8,10 @@ const getSubscriptionsInfo = (subscriptionInfo: ISubscriptionInfo) => {
   const { Download = 0, Upload = 0, Total = 0, Expire = 0 } = subscriptionInfo
 
   const total = byteSize(Total, { units: 'iec' })
-  const used = byteSize(Download + Upload, {
+  const unused = byteSize(Total - Download - Upload, {
     units: 'iec',
   })
-  const percentage = toFinite((((Download + Upload) / Total) * 100).toFixed(2))
+  const percentage = toFinite((((Total- Download - Upload) / Total) * 100).toFixed(2))
 
   const expirePrefix = () => {
     const [t] = useI18n()
@@ -31,7 +31,7 @@ const getSubscriptionsInfo = (subscriptionInfo: ISubscriptionInfo) => {
 
   return {
     total,
-    used,
+    unused,
     percentage,
     expirePrefix,
     expireStr,
@@ -52,7 +52,7 @@ export const SubscriptionInfo = (props: {
       <progress class="progress" value={info.percentage} max="100" />
 
       <div class="text-sm text-slate-500">
-        {`${info.used}`} / {`${info.total}`} ( {info.percentage}% )
+        {`${info.unused}`} / {`${info.total}`} ( {info.percentage}% )
       </div>
 
       <div class="text-sm text-slate-500">
